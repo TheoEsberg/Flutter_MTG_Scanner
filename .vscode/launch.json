@@ -1,0 +1,14 @@
+{
+    // Use IntelliSense to learn more about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // More information on https://go.microsoft.com/fwlink/?linkid=830387
+
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "App Debugging",
+            "type": "dart",
+            "request": "launch",
+        }
+    ]
+}

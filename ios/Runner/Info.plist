@@ -45,5 +45,7 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>This application will need access to you camera in order to be able to scan you MTG cards.</string>
 </dict>
 </plist>

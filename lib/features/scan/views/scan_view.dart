@@ -17,22 +17,6 @@ class ScanView extends ConsumerWidget {
         ),
       ),
       body: const CameraScannerWidget(),
-      // FutureBuilder<CameraDescription>(
-      //   future: getCamera(),
-      //   builder: (context, snapshot) {
-      //     if (snapshot.connectionState == ConnectionState.done) {
-      //       if (snapshot.hasData) {
-      //         return CameraWidget(camera: snapshot.data!);
-      //       } else if (snapshot.hasError) {
-      //         return Text('Error: ${snapshot.error}');
-      //       } else {
-      //         return const Text('Waiting for camera...');
-      //       }
-      //     } else {
-      //       return const CircularProgressIndicator();
-      //     }
-      //   },
-      // ),
     );
   }
 }

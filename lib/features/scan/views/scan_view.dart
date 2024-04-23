@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_mtg_scanner/features/scan/widgets/camera_widget.dart';
+import 'package:flutter_mtg_scanner/features/scan/widgets/camera_scanner_widget.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class ScanView extends ConsumerWidget {
@@ -16,22 +16,23 @@ class ScanView extends ConsumerWidget {
           child: Text('MTG Scanner'),
         ),
       ),
-      body: FutureBuilder<CameraDescription>(
-        future: getCamera(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            if (snapshot.hasData) {
-              return CameraWidget(camera: snapshot.data!);
-            } else if (snapshot.hasError) {
-              return Text('Error: ${snapshot.error}');
-            } else {
-              return const Text('Waiting for camera...');
-            }
-          } else {
-            return const CircularProgressIndicator();
-          }
-        },
-      ),
+      body: const CameraScannerWidget(),
+      // FutureBuilder<CameraDescription>(
+      //   future: getCamera(),
+      //   builder: (context, snapshot) {
+      //     if (snapshot.connectionState == ConnectionState.done) {
+      //       if (snapshot.hasData) {
+      //         return CameraWidget(camera: snapshot.data!);
+      //       } else if (snapshot.hasError) {
+      //         return Text('Error: ${snapshot.error}');
+      //       } else {
+      //         return const Text('Waiting for camera...');
+      //       }
+      //     } else {
+      //       return const CircularProgressIndicator();
+      //     }
+      //   },
+      // ),
     );
   }
 }

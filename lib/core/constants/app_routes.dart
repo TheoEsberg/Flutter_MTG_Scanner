@@ -10,4 +10,7 @@ class AppRoutes {
   static const String Scan = 'scan';
   static const String Search = 'search';
   static const String Settings = 'settings';
+
+  // Test
+  static const String ScanResult = 'scanResult';
 }

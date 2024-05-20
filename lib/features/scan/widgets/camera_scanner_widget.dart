@@ -182,7 +182,7 @@ class _CameraScannerState extends State<CameraScannerWidget>
       final recognizedText = await _textRecognizer.processImage(inputImage);
       print(recognizedText.text);
 
-      List<String> wordsToCheck = ['ONC', 'STAR', 'MOON'];
+      List<String> wordsToCheck = ['ONC', 'STAR', 'MOON', 'RÖDA', 'LUNDGRENS'];
       bool containsWord = false;
 
       for (String word in wordsToCheck) {

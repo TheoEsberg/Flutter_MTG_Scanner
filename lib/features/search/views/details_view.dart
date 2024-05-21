@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mtg_scanner/core/data/mtg_service.dart';
+import 'package:flutter_mtg_scanner/features/search/widgets/mtg_card_info_widget.dart';
+import 'package:flutter_mtg_scanner/features/search/widgets/mtg_legalites_widget.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:scryfall_api/scryfall_api.dart';
 
@@ -16,18 +19,53 @@ class DetailsView extends ConsumerWidget {
       loading: () => const CircularProgressIndicator(),
       data: (card) {
         return Scaffold(
-          appBar: AppBar(
-            title: Text(card.name),
-            centerTitle: true,
+          body: CustomScrollView(
+            slivers: <Widget>[
+              SliverAppBar(
+                pinned: true,
+                expandedHeight: 240.0,
+                flexibleSpace: FlexibleSpaceBar(
+                  title: Text(
+                    card.name,
+                    style: const TextStyle(fontSize: 16.0),
+                  ),
+                  // TODO: Make it so that the background can show the first face of a two faced card
+                  background: getArtCrop(card),
+                ),
+              ),
+              SliverList(
+                delegate: SliverChildListDelegate([
+                  MtgCardInfoWidget(card),
+                  MtgLegalitesWidget(card),
+                ]),
+              ),
+            ],
           ),
-          body: ListView(children: [
-            Padding(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 16.0, vertical: 16.0),
-                child: getImage(card)),
-          ]),
         );
       },
+    );
+  }
+
+  Image getArtCrop(MtgCard card) {
+    String imageUrl =
+        'https://upload.wikimedia.org/wikipedia/en/thumb/a/aa/Magic_the_gathering-card_back.jpg/220px-Magic_the_gathering-card_back.jpg';
+
+    if (card.imageUris != null && card.imageUris?.artCrop != null) {
+      return Image.network(
+        card.imageUris!.artCrop.toString(),
+        fit: BoxFit.cover,
+      );
+    } else if (card.cardFaces != null &&
+        card.cardFaces?.first.imageUris?.artCrop != null) {
+      return Image.network(
+        card.cardFaces!.first.imageUris!.artCrop.toString(),
+        fit: BoxFit.cover,
+      );
+    }
+
+    return Image.network(
+      imageUrl,
+      fit: BoxFit.cover,
     );
   }
 

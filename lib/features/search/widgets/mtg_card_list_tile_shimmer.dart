@@ -33,9 +33,10 @@ class MtgCardListTileShimmer extends StatelessWidget {
                     margin: const EdgeInsets.only(bottom: 8.0),
                   ),
                   Container(
-                      width: 100,
-                      height: 15,
-                      color: Theme.of(context).colorScheme.secondary)
+                    width: 100,
+                    height: 15,
+                    color: Theme.of(context).colorScheme.secondary,
+                  )
                 ],
               ),
             )

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mtg_scanner/core/constants/app_routes.dart';
+import 'package:go_router/go_router.dart';
 import 'package:scryfall_api/scryfall_api.dart';
 
 class MtgCardListTile extends StatelessWidget {
@@ -11,6 +13,11 @@ class MtgCardListTile extends StatelessWidget {
       title: Text(card.name),
       subtitle: Text(card.typeLine),
       leading: getCardImage() ?? const SizedBox.shrink(),
+      onTap: () {
+        context.pushNamed(AppRoutes.CardDetails, pathParameters: {
+          'id': card.id,
+        });
+      },
     );
   }
 

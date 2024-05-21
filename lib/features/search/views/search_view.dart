@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_mtg_scanner/core/data/mtg_service.dart';
 import 'package:flutter_mtg_scanner/features/search/widgets/mtg_card_list_tile.dart';
+import 'package:flutter_mtg_scanner/features/search/widgets/mtg_card_list_tile_shimmer.dart';
 import 'package:flutter_mtg_scanner/features/search/widgets/mtg_search_bar.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:scryfall_api/scryfall_api.dart';
@@ -25,6 +26,7 @@ class SearchView extends HookConsumerWidget {
         centerTitle: true,
         bottom: TabBar(
           controller: tabController,
+          labelColor: Colors.purpleAccent,
           tabs: const [
             Tab(
               text: 'Search',
@@ -55,7 +57,7 @@ class SearchView extends HookConsumerWidget {
                         ref.watch(searchProvider(page));
                     return responseAsync.when(
                       error: (err, stack) => const SizedBox.shrink(),
-                      loading: () => const CircularProgressIndicator(),
+                      loading: () => const MtgCardListTileShimmer(),
                       data: (response) {
                         if (indexInPage >= response.data.length) {
                           return null;

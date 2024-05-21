@@ -5,6 +5,7 @@ import 'package:flutter_mtg_scanner/core/routes/outside_routes.dart';
 import 'package:flutter_mtg_scanner/core/routes/scan_branch.dart';
 import 'package:flutter_mtg_scanner/core/routes/search_branch.dart';
 import 'package:flutter_mtg_scanner/core/routes/settings_branch.dart';
+import 'package:flutter_mtg_scanner/core/theme/theme.dart';
 import 'package:flutter_mtg_scanner/core/widgets/mtg_bottom_navigation_bar.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -33,7 +34,10 @@ class MyApp extends HookConsumerWidget {
     );
 
     return MaterialApp.router(
+      theme: lightMode,
+      darkTheme: darkMode,
       routerConfig: router,
+      debugShowCheckedModeBanner: false,
     );
   }
 }

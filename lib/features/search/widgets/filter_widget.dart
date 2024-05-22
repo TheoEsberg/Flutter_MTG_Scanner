@@ -16,53 +16,53 @@ class FilterWidget extends ConsumerWidget {
 
   Widget colors() {
     List<SvgPicture> colorIcons = [];
-    double IconSize = 32.0;
+    double iconSize = 32.0;
 
     colorIcons.add(
       SvgPicture.asset(
         'assets/icons/{W}.svg',
-        height: 32.0,
-        width: 32.0,
+        height: iconSize,
+        width: iconSize,
         fit: BoxFit.scaleDown,
       ),
     );
     colorIcons.add(
       SvgPicture.asset(
         'assets/icons/{U}.svg',
-        height: 32.0,
-        width: 32.0,
+        height: iconSize,
+        width: iconSize,
         fit: BoxFit.scaleDown,
       ),
     );
     colorIcons.add(
       SvgPicture.asset(
         'assets/icons/{B}.svg',
-        height: 32.0,
-        width: 32.0,
+        height: iconSize,
+        width: iconSize,
         fit: BoxFit.scaleDown,
       ),
     );
     colorIcons.add(
       SvgPicture.asset(
         'assets/icons/{R}.svg',
-        height: 32.0,
-        width: 32.0,
+        height: iconSize,
+        width: iconSize,
         fit: BoxFit.scaleDown,
       ),
     );
     colorIcons.add(
       SvgPicture.asset(
         'assets/icons/{G}.svg',
-        height: 32.0,
-        width: 32.0,
+        height: iconSize,
+        width: iconSize,
         fit: BoxFit.scaleDown,
       ),
     );
     colorIcons.add(
       SvgPicture.asset(
         'assets/icons/{C}.svg',
-        height: 32.0,
-        width: 32.0,
+        height: iconSize,
+        width: iconSize,
         fit: BoxFit.scaleDown,
       ),
     );

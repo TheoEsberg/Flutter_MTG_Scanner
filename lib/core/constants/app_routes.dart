@@ -14,4 +14,5 @@ class AppRoutes {
   // Test
   static const String ScanResult = 'scanResult';
   static const String CardDetails = 'cardDetails';
+  static const String CardFullView = 'cardFullView';
 }

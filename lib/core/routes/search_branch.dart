@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mtg_scanner/core/constants/app_routes.dart';
 import 'package:flutter_mtg_scanner/features/search/views/details_view.dart';
+import 'package:flutter_mtg_scanner/features/search/views/mtg_card_full_view.dart';
 import 'package:flutter_mtg_scanner/features/search/views/search_view.dart';
 import 'package:go_router/go_router.dart';
 
@@ -16,6 +17,14 @@ final searchBranch = StatefulShellBranch(routes: <RouteBase>[
         pageBuilder: (context, state) {
           final uuid = state.pathParameters['id']!;
           return MaterialPage(child: DetailsView(uuid));
+        },
+      ),
+      GoRoute(
+        path: 'fullview:id',
+        name: AppRoutes.CardFullView,
+        pageBuilder: (context, state) {
+          final uuid = state.pathParameters['id']!;
+          return MaterialPage(child: MtgCardFullView(uuid));
         },
       ),
     ],

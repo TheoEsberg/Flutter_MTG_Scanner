@@ -1,6 +1,7 @@
-import 'package:flutter/cupertino.dart';
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter_mtg_scanner/core/data/mtg_service.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:scryfall_api/scryfall_api.dart';
@@ -11,6 +12,8 @@ class MtgCardInfoWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final bool isFlipped = ref.watch(cardIsFlippedStateProvider);
+
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Container(
@@ -20,120 +23,111 @@ class MtgCardInfoWidget extends ConsumerWidget {
         ),
         child: Column(
           children: [
-            Text(
-              card.name,
-              style: const TextStyle(
-                fontSize: 24.0,
-              ),
-            ),
-            getManaCostIcons(card) ?? const SizedBox.shrink(),
-            Text(card.typeLine),
-            processTextWithIcons(card)
+            (card.oracleText != '')
+                ? processTextWithIcons(card, isFlipped)
+                : const SizedBox.shrink(),
+            getFlavorText(card, isFlipped),
+            // (card.flavorText != '')
+            //     ? getFlavorText(card, isFlipped)
+            //     : const SizedBox.shrink(),
           ],
         ),
       ),
     );
   }
 
-  Widget processTextWithIcons(MtgCard card) {
-    // Regular expression to match {*}
+  Padding processTextWithIcons(MtgCard card, bool isFlipped) {
+    String cardText;
+    if (card.cardFaces != null) {
+      if (isFlipped) {
+        cardText = card.cardFaces?.elementAt(1).oracleText ?? '';
+      } else {
+        cardText = card.cardFaces?.elementAt(0).oracleText ?? '';
+      }
+    } else {
+      cardText = card.oracleText ?? '';
+    }
+
     RegExp regExp = RegExp(r'{(\d*\/?[\w\/]*)}');
 
-    // Split the text into parts based on matches
-    List<String> parts = card.oracleText!.split(regExp);
-    Iterable<RegExpMatch> matches = regExp.allMatches(card.oracleText!);
+    log(cardText);
+    cardText = cardText.replaceAll('\n', '\n\n');
+    List<String> parts = cardText.split(regExp);
+    Iterable<RegExpMatch> matches = regExp.allMatches(cardText);
 
-    // Process each part and create a list of widgets
-    List<Widget> widgets = [];
+    List<InlineSpan> widgets = [];
     for (int i = 0; i < parts.length; i++) {
-      // Text part
-      widgets.add(Text(parts[i]));
-      print(parts[i]);
-      print(parts.length);
+      widgets.add(TextSpan(text: parts[i]));
 
-      // If it's an odd index, it's a match, so add the icon
-      if (parts.length - 1 > i) {
-        widgets.add(getManaCostIconsForText(matches.first.group(0).toString()));
+      if (i < matches.length) {
+        RegExpMatch match = matches.elementAt(i);
+        String matchText = match.group(0)!;
+
+        widgets.add(
+          WidgetSpan(
+            child: SvgPicture.asset(
+              'assets/icons/${matchText.replaceAll('/', '')}.svg',
+              height: 16.0,
+              width: 16.0,
+              fit: BoxFit.scaleDown,
+            ),
+          ),
+        );
       }
     }
 
     return Padding(
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(16),
       child: Text.rich(
-        textAlign: TextAlign.center,
-        style: const TextStyle(fontSize: 12),
-        TextSpan(
-          children: [
-            TextSpan(text: parts[0]),
-            WidgetSpan(
-              child: SvgPicture.asset(
-                'assets/icons/${matches.first.group(0).toString().replaceAll('/', '')}.svg',
-                height: 16.0,
-                width: 16.0,
-                fit: BoxFit.scaleDown,
-              ),
+        TextSpan(children: widgets),
+      ),
+    );
+  }
+
+  Padding getFlavorText(MtgCard card, bool isFlipped) {
+    if (card.flavorText != null) {
+      return Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Text(
+          card.flavorText!,
+          style: const TextStyle(fontSize: 12.0),
+          textAlign: TextAlign.center,
+        ),
+      );
+    }
+
+    if (card.cardFaces != null) {
+      if (isFlipped) {
+        if (card.cardFaces!.elementAt(1).flavorText != null) {
+          return Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Text(
+              card.cardFaces!.elementAt(1).flavorText ?? '',
+              style: const TextStyle(fontSize: 12.0),
+              textAlign: TextAlign.center,
             ),
-            TextSpan(text: parts[1]),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Flexible getManaCostIconsForText(String matchText) {
-    print('THIS IS THE MATCHTEXT : $matchText');
-    // Here, you can reuse your existing method getManaCostIcons()
-    // and return the Row of icons
-    // For demonstration purpose, let's just return a placeholder Text widget
-    return Flexible(
-      child: SvgPicture.asset(
-        'assets/icons/${matchText.replaceAll('/', '')}.svg',
-        height: 16.0,
-        width: 16.0,
-        fit: BoxFit.scaleDown,
-      ),
-    );
-  }
-
-  Row? getManaCostIcons(MtgCard card) {
-    if (card.manaCost == '') {
-      return null;
+          );
+        } else {
+          return const Padding(
+            padding: EdgeInsets.zero,
+            child: SizedBox.shrink(),
+          );
+        }
+      }
+      if (card.cardFaces!.elementAt(0).flavorText != null) {
+        return Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            card.cardFaces!.elementAt(0).flavorText ?? '',
+            style: const TextStyle(fontSize: 12.0),
+            textAlign: TextAlign.center,
+          ),
+        );
+      }
     }
-
-    RegExp regExp = RegExp(r'{(\d*\/?[\w\/]*)}');
-
-    Iterable<RegExpMatch> matches = regExp.allMatches(card.manaCost!);
-
-    if (matches.isEmpty) {
-      return Row(
-        children: [
-          SvgPicture.asset(
-            'assets/icons/${card.manaCost!.replaceAll('/', '')}.svg',
-            height: 16.0,
-            width: 16.0,
-            fit: BoxFit.scaleDown,
-          )
-        ],
-      );
-    }
-
-    List<SvgPicture> iconList = [];
-    for (RegExpMatch match in matches) {
-      String matchText = match.group(0)!;
-
-      iconList.add(
-        SvgPicture.asset(
-          'assets/icons/${matchText.replaceAll('/', '')}.svg',
-          height: 16.0,
-          width: 16.0,
-          fit: BoxFit.scaleDown,
-        ),
-      );
-    }
-
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: iconList,
+    return const Padding(
+      padding: EdgeInsets.zero,
+      child: SizedBox.shrink(),
     );
   }
 }

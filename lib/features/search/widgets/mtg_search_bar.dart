@@ -43,8 +43,13 @@ class MtgSearchBar extends ConsumerWidget {
                           FocusManager.instance.primaryFocus?.unfocus();
                         },
                         onChanged: (value) {
-                          ref.read(searchQueryStateProvider.notifier).state =
-                              value;
+                          if (value != '') {
+                            ref.read(searchQueryStateProvider.notifier).state =
+                                value;
+                          } else {
+                            ref.read(searchQueryStateProvider.notifier).state =
+                                'a';
+                          }
                         },
                         onSubmitted: (value) {
                           ref.invalidate(searchProvider);

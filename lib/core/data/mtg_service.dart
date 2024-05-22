@@ -5,6 +5,7 @@ import 'package:scryfall_api/scryfall_api.dart';
 part 'mtg_service.g.dart';
 
 final searchQueryStateProvider = StateProvider<String>((ref) => 'a');
+final cardIsFlippedStateProvider = StateProvider<bool>((ref) => false);
 
 @riverpod
 Future<PaginableList<MtgCard>> search(SearchRef ref, int currentPage) async {

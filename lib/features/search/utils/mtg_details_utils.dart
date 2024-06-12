@@ -124,3 +124,32 @@ List<InteractiveViewer> getImage(MtgCard card, bool isFlipped) {
   }
   return imgList;
 }
+
+Uri getLargestCardImageUri(MtgCard card) {
+  String imageUrl =
+      'https://upload.wikimedia.org/wikipedia/en/thumb/a/aa/Magic_the_gathering-card_back.jpg/220px-Magic_the_gathering-card_back.jpg';
+
+  if (card.imageUris != null) {
+    if (card.imageUris?.png != null) {
+      imageUrl = card.imageUris!.png.toString();
+    } else if (card.imageUris?.large != null) {
+      imageUrl = card.imageUris!.large.toString();
+    } else if (card.imageUris?.normal != null) {
+      imageUrl = card.imageUris!.normal.toString();
+    } else if (card.imageUris?.small != null) {
+      imageUrl = card.imageUris!.small.toString();
+    }
+  } else if (card.cardFaces != null) {
+    if (card.cardFaces!.elementAt(0).imageUris?.png != null) {
+      imageUrl = card.cardFaces!.elementAt(0).imageUris!.png.toString();
+    } else if (card.cardFaces!.elementAt(0).imageUris?.large != null) {
+      imageUrl = card.cardFaces!.elementAt(0).imageUris!.large.toString();
+    } else if (card.cardFaces!.elementAt(0).imageUris?.normal != null) {
+      imageUrl = card.cardFaces!.elementAt(0).imageUris!.normal.toString();
+    } else if (card.cardFaces!.elementAt(0).imageUris?.small != null) {
+      imageUrl = card.cardFaces!.elementAt(0).imageUris!.small.toString();
+    }
+  }
+
+  return Uri.parse(imageUrl);
+}

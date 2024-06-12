@@ -27,9 +27,6 @@ class MtgCardInfoWidget extends ConsumerWidget {
                 ? processTextWithIcons(card, isFlipped)
                 : const SizedBox.shrink(),
             getFlavorText(card, isFlipped),
-            // (card.flavorText != '')
-            //     ? getFlavorText(card, isFlipped)
-            //     : const SizedBox.shrink(),
           ],
         ),
       ),

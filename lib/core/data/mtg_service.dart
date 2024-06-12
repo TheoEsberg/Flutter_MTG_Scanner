@@ -21,3 +21,10 @@ Future<MtgCard> searchById(SearchByIdRef ref, String id) async {
   final response = await client.getCardById(id);
   return response;
 }
+
+@riverpod
+Future<PaginableList<MtgSet>> getAllSets(GetAllSetsRef ref) async {
+  final client = ScryfallApiClient();
+  final response = await client.getAllSets();
+  return response;
+}

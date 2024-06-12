@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_mtg_scanner/core/data/mtg_service.dart';
@@ -55,7 +53,7 @@ class SearchView extends HookConsumerWidget {
                         child: Column(
                           children: [
                             const Text(
-                              "Your query didn’t match any cards in our library.\nWe use Scryfall's fulltext search system.\n\nTo learn more about Scryfall's syntax go here:",
+                              "Your query didn't match any cards in our library.\nWe use Scryfall's fulltext search system.\n\nTo learn more about Scryfall's syntax go here:",
                               textAlign: TextAlign.center,
                             ),
                             InkWell(
@@ -77,7 +75,6 @@ class SearchView extends HookConsumerWidget {
                         itemBuilder: (context, index) {
                           final page = index ~/ pageSize + 1;
                           final indexInPage = index % pageSize;
-                          log('index: $index, page: $page, indexInPage: $indexInPage, totalCards: $totalCards');
                           final AsyncValue<PaginableList<MtgCard>>
                               responseAsync = ref.watch(searchProvider(page));
                           return responseAsync.when(

@@ -1,20 +1,24 @@
 import 'dart:io';
+import 'dart:developer';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mtg_scanner/core/constants/app_routes.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:scryfall_api/scryfall_api.dart';
 
-class CameraScannerWidget extends StatefulWidget {
-  const CameraScannerWidget({super.key});
+class CameraScannerWidget extends ConsumerStatefulWidget {
+  const CameraScannerWidget(this.sets, {super.key});
+  final PaginableList<MtgSet> sets;
 
   @override
-  State<CameraScannerWidget> createState() => _CameraScannerState();
+  ConsumerState<CameraScannerWidget> createState() => _CameraScannerState();
 }
 
-class _CameraScannerState extends State<CameraScannerWidget>
+class _CameraScannerState extends ConsumerState<CameraScannerWidget>
     with WidgetsBindingObserver {
   bool _isPermissionGranted = false;
 
@@ -180,15 +184,44 @@ class _CameraScannerState extends State<CameraScannerWidget>
 
       final inputImage = InputImage.fromFile(file);
       final recognizedText = await _textRecognizer.processImage(inputImage);
-      print(recognizedText.text);
-
-      List<String> wordsToCheck = ['ONC', 'STAR', 'MOON', 'RÖDA', 'LUNDGRENS'];
       bool containsWord = false;
+      log('this is the text I got: ${recognizedText.text}');
+      for (var b in recognizedText.blocks) {
+        log(b.text);
+      }
+      // Split the recognized text by the • character
+      final List<String> parts = recognizedText.text.split('•');
 
-      for (String word in wordsToCheck) {
-        if (recognizedText.text.contains(word)) {
+      print(parts.first);
+
+      for (var set in widget.sets.data) {
+        log('Set code: ${set.code}');
+        RegExp exp = RegExp("\\b${set.code}\\b", caseSensitive: false);
+        if (exp.hasMatch(parts.first)) {
+          log('This set code is in the scanned text: ${set.code}');
           containsWord = true;
-          break;
+        }
+      }
+
+      // Take the part before the • character
+      final String textBeforeBullet = parts.first;
+
+      // Regular expression pattern to match set codes
+      final RegExp setCodePattern = RegExp(r'\b[A-Za-z0-9]{3}\b');
+
+      // Find all matches of set codes in the text before the bullet
+      final Iterable<Match> matches =
+          setCodePattern.allMatches(textBeforeBullet);
+
+      // Iterate through each match
+      for (var match in matches) {
+        // Extract the matched set code
+        final setCode = match.group(0);
+
+        // Check if the extracted set code is in the list of available sets
+        if (widget.sets.data.any((set) => setCode == set.code)) {
+          log('This set code is in the scanned text: $setCode');
+          containsWord = true;
         }
       }
 
@@ -206,7 +239,6 @@ class _CameraScannerState extends State<CameraScannerWidget>
           ),
         );
       }
-      print(e);
     }
   }
 }

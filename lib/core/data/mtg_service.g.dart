@@ -282,5 +282,21 @@ class _SearchByIdProviderElement
   @override
   String get id => (origin as SearchByIdProvider).id;
 }
+
+String _$getAllSetsHash() => r'1733fc19651093161c528e8e7736c9768ff7a98e';
+
+/// See also [getAllSets].
+@ProviderFor(getAllSets)
+final getAllSetsProvider =
+    AutoDisposeFutureProvider<PaginableList<MtgSet>>.internal(
+  getAllSets,
+  name: r'getAllSetsProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$getAllSetsHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef GetAllSetsRef = AutoDisposeFutureProviderRef<PaginableList<MtgSet>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

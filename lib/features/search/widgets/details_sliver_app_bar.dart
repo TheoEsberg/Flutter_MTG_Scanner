@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mtg_scanner/core/constants/app_routes.dart';
 import 'package:flutter_mtg_scanner/core/data/mtg_service.dart';
+import 'package:flutter_mtg_scanner/features/login/repositories/login_repository.dart';
+import 'package:flutter_mtg_scanner/features/search/models/card_collection_model.dart';
+import 'package:flutter_mtg_scanner/features/search/repositories/details_repository.dart';
 import 'package:flutter_mtg_scanner/features/search/utils/mtg_details_utils.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -14,6 +17,7 @@ class DetailsSliverAppBar extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final bool isFlipped = ref.watch(cardIsFlippedStateProvider);
+    final detailsRepo = ref.watch(detailsRepositoryProvider);
 
     return SliverAppBar(
       pinned: true,
@@ -103,7 +107,25 @@ class DetailsSliverAppBar extends ConsumerWidget {
                   onSelected: (index) async {
                     switch (index) {
                       case 'collection':
-                        print('Add to collection');
+                        var userId = ref.read(userProvider)!.id;
+                        var result = await detailsRepo.addCardToCollection(
+                            cardModel: CardCollectionModel(
+                                id: card.id,
+                                name: card.name,
+                                typeLine: card.typeLine,
+                                image: getLargestCardImageUri(card)),
+                            userId: userId);
+                        if (result != null && context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content: Text(
+                                  'Successfully added ${card.name} to your collection.')));
+                        } else if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content: Text(
+                            'An error occured when adding ${card.name} to your collection',
+                            style: const TextStyle(color: Colors.red),
+                          )));
+                        }
                         break;
                       case 'deck':
                         print('Add to deck...');
